@@ -25,6 +25,7 @@
     "globby": "^9.0.0",
     "hops-config": "^11.3.0",
     "hops-mixin": "^11.3.0",
+    "mime": "^2.3.1",
     "pathifist": "^1.0.0",
     "prompt": "^1.0.0",
     "resolve-tree": "^0.1.13",
