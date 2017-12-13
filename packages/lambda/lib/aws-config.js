@@ -46,21 +46,21 @@ module.exports = function getAWSConfig(hopsConfig) {
     );
   }
 
-  if (
-    !config.domainName &&
-    config.basePath.indexOf(config.stageName) !== 0 &&
-    trimSlashes(hopsConfig.assetPath).indexOf(config.stageName) !== 0
-  ) {
-    console.warn(
-      'When no custom domain is configured, the stageName (' +
-        config.stageName +
-        ') should be the first path segment in basePath (' +
-        config.basePath +
-        ') and assetPath (' +
-        hopsConfig.assetPath +
-        ').'
-    );
-  }
+  // if (
+  //   !config.domainName &&
+  //   config.basePath.indexOf(config.stageName) !== 0 &&
+  //   trimSlashes(hopsConfig.assetPath).indexOf(config.stageName) !== 0
+  // ) {
+  //   console.warn(
+  //     'When no custom domain is configured, the stageName (' +
+  //       config.stageName +
+  //       ') should be the first path segment in basePath (' +
+  //       config.basePath +
+  //       ') and assetPath (' +
+  //       hopsConfig.assetPath +
+  //       ').'
+  //   );
+  // }
 
   if (config.domainName && !config.certificateArn) {
     console.error(
