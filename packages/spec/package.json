@@ -25,6 +25,7 @@
     "node": ">=8.10.0"
   },
   "devDependencies": {
+    "apollo-link-schema": "^1.1.1",
     "create-hops-app": "^11.0.0",
     "cross-fetch": "^3.0.0",
     "fs-extra": "^7.0.0",

@@ -15,6 +15,7 @@ const {
   HeuristicFragmentMatcher,
 } = require('apollo-cache-inmemory');
 require('cross-fetch/polyfill');
+const introspectionResult = require('./fragment-types.json');
 
 class GraphQLMixin extends Mixin {
   constructor(config, element, { graphql: options = {} } = {}) {
@@ -62,12 +63,11 @@ class GraphQLMixin extends Mixin {
   }
 
   createFragmentMatcher() {
-    if (global['APOLLO_FRAGMENT_TYPES']) {
-      return new IntrospectionFragmentMatcher({
-        introspectionQueryResultData: global['APOLLO_FRAGMENT_TYPES'],
-      });
-    }
-    return new HeuristicFragmentMatcher();
+    return !introspectionResult
+      ? new HeuristicFragmentMatcher()
+      : new IntrospectionFragmentMatcher({
+          introspectionQueryResultData: introspectionResult,
+        });
   }
 
   enhanceElement(reactElement) {

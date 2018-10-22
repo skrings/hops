@@ -1,5 +1,4 @@
 const { Mixin } = require('hops-mixin');
-const strip = require('strip-indent');
 const {
   internal: { createWebpackMiddleware, StatsFilePlugin },
 } = require('@untool/webpack');
@@ -14,47 +13,6 @@ function exists(path) {
 }
 
 class GraphQLMixin extends Mixin {
-  registerCommands(yargs) {
-    yargs.command('graphql', 'Execute GraphQL specific tasks', yargs =>
-      yargs
-        .usage('Usage: hops graphql <command>')
-        .command({
-          command: 'introspect',
-          describe: 'Fetches GraphQL schema information for introspection',
-          builder: {
-            header: {
-              alias: 'H',
-              type: 'array',
-              default: [],
-              describe: strip(`
-                Additional HTTP headers to be used when executing the schema
-                introspection on the remote server. Specify this multiple
-                times to add more headers.\nFormat: "Header: Value"
-              `),
-            },
-          },
-          handler: argv => {
-            require('./lib/fragments')({
-              graphqlUri: this.config.graphqlUri,
-              schemaFile: this.config.graphqlSchemaFile,
-              fragmentsFile: this.config.fragmentsFile,
-              headers: argv.header,
-            })
-              .then(() => {
-                console.log('Fetched and saved GraphQL fragments');
-              })
-              .catch(err => {
-                console.error('Could not fetch GraphQL fragments:');
-                console.trace(err);
-              });
-          },
-        })
-        .help('help')
-        .alias('h', 'help')
-        .demandCommand()
-    );
-  }
-
   configureServer(rootApp, middleware, mode) {
     if (!exists(this.config.graphqlMockSchemaFile) || mode !== 'develop') {
       return;
@@ -71,10 +29,23 @@ class GraphQLMixin extends Mixin {
   configureBuild(webpackConfig, loaderConfigs, target) {
     const { allLoaderConfigs } = loaderConfigs;
 
-    allLoaderConfigs.splice(allLoaderConfigs.length - 1, 0, {
-      test: /\.(graphql|gql)$/,
-      loader: 'graphql-tag/loader',
-    });
+    allLoaderConfigs.splice(
+      allLoaderConfigs.length - 1,
+      0,
+      {
+        test: /\.(graphql|gql)$/,
+        loader: 'graphql-tag/loader',
+      },
+      {
+        test: require.resolve('./fragment-types.json'),
+        loader: require.resolve('./lib/fragment-types-loader'),
+        options: {
+          graphqlUri: this.config.graphqlUri,
+          graphqlSchemaFile: this.config.graphqlSchemaFile,
+          graphqlMockSchemaFile: this.config.graphqlMockSchemaFile,
+        },
+      }
+    );
 
     webpackConfig.externals.push('encoding');
 
