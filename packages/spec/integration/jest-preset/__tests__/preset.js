@@ -23,4 +23,25 @@ describe('jest-preset', () => {
     const css = require('./setup/local-css');
     expect(css.default.foo).toBe('foo');
   });
+
+  it('allows to use importComponent', done => {
+    const React = require('react');
+    const renderer = require('react-test-renderer');
+    const Component = require('./setup/import-component').default;
+    const { MemoryRouter } = require('react-router-dom');
+
+    const rendered = renderer.create(
+      <MemoryRouter>
+        <Component />
+      </MemoryRouter>
+    );
+
+    expect(rendered.root.findAllByType('h1').length).toBe(0);
+
+    window.setTimeout(() => {
+      expect(rendered.root.findAllByType('h1')[0].children[0]).toEqual('hello');
+      expect(rendered.root.findAllByType('h1')[1].children[0]).toEqual('bye');
+      done();
+    }, 0);
+  });
 });

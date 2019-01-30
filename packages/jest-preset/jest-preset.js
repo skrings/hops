@@ -8,6 +8,9 @@ module.exports = {
     '^.+\\.css(\\?global)?$': 'identity-obj-proxy',
     '^hops$': 'hops/lib/runtime.js',
   },
+  globals: {
+    __webpack_modules__: {},
+  },
   moduleFileExtensions: [...defaults.moduleFileExtensions, 'ts', 'tsx'],
   testMatch: [
     ...defaults.testMatch,

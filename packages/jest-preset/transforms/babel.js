@@ -1,4 +1,4 @@
-var babelJest = require('babel-jest');
+const babelJest = require('babel-jest');
 
 module.exports = babelJest.createTransformer({
   presets: [
@@ -17,6 +17,8 @@ module.exports = babelJest.createTransformer({
     require.resolve('babel-plugin-dynamic-import-node'),
     require.resolve('@babel/plugin-proposal-class-properties'),
     require.resolve('@babel/plugin-proposal-object-rest-spread'),
+    [require.resolve('@untool/react/lib/babel'), { module: 'hops' }],
+    require.resolve('../babel-plugin-import-component'),
   ],
   babelrc: false,
 });
